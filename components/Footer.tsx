@@ -27,7 +27,7 @@ export default function Footer() {
               <img
                 src="/mvituzzo-logo-footer.png"
                 alt="M Vituzzo Empreendimentos"
-                className="h-16 w-auto max-w-full px-2"
+                className="h-32 w-auto max-w-full px-2"
               />
             </div>
           </div>
