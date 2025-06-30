@@ -13,17 +13,17 @@ export default function Footer() {
             {/* Seção esquerda - Carlos Alberto */}
             <div className="flex flex-col items-center text-center space-y-4">
               <img
-                src="/carlos-foto-circular.png"
+                src="/carlos-circulo.png"
                 alt="Carlos Alberto"
                 className="w-32 h-32 rounded-full shadow-lg object-cover"
               />
-              <img src="/carlos-alberto-nome.png" alt="Carlos Alberto" className="h-8 w-auto max-w-xs" />
-              <img src="/creci-numero.png" alt="CRECI 176.642F" className="h-6 w-auto max-w-xs" />
+              <img src="/carlos-foto.png" alt="Carlos Alberto" className="h-8 w-auto max-w-xs" />
+              <img src="/creci.png" alt="CRECI 176.642F" className="h-6 w-auto max-w-xs" />
             </div>
 
             {/* Seção direita - Partner e Logo */}
             <div className="flex flex-col items-center text-center space-y-6">
-              <img src="/partner-titulo.png" alt="Partner" className="h-10 w-auto max-w-xs" />
+              <img src="/partner.png" alt="Partner" className="h-10 w-auto max-w-xs" />
               <img src="/mvituzzo-logo-footer.png" alt="M Vituzzo Empreendimentos" className="h-16 w-auto max-w-sm" />
             </div>
           </div>
