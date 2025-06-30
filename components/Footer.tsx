@@ -15,7 +15,7 @@ export default function Footer() {
               <img
                 src="/carlos-foto.png"
                 alt="Carlos Alberto"
-                className="w-32 h-32 rounded-full shadow-lg object-cover"
+                className="w-42 h-42 rounded-full shadow-lg object-cover"
               />
               <img src="/carlos-alberto.png" alt="Carlos Alberto" className="h-8 w-auto max-w-xs" />
               <img src="/creci.png" alt="CRECI 176.642F" className="h-6 w-auto max-w-xs" />
