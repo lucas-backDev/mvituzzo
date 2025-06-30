@@ -23,7 +23,7 @@ export default function Footer() {
 
             {/* Seção direita - Partner e Logo */}
             <div className="flex flex-col items-center text-center space-y-6 px-4">
-              <img src="/partner.png" alt="Partner" className="h-10 w-auto max-w-xs" />
+              <img src="/partner.png" alt="Partner" className="h-7 w-auto max-w-xs" />
               <img
                 src="/mvituzzo-logo-footer.png"
                 alt="M Vituzzo Empreendimentos"
