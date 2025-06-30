@@ -5,7 +5,7 @@ export default function ConceptSection() {
       <section
         className="min-h-screen bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('/placeholder.svg?height=1200&width=1920')`,
+          backgroundImage: `url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1750704771/$kk4spjxv7o')`,
         }}
       >
         <div className="container mx-auto px-4 py-16">
@@ -42,13 +42,17 @@ export default function ConceptSection() {
       <section
         className="min-h-screen bg-cover bg-right bg-no-repeat"
         style={{
-          backgroundImage: `url('/placeholder.svg?height=1200&width=1920')`,
+          backgroundImage: `url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1750704771/$9jcgng3oiqj')`,
         }}
       >
         <div className="container mx-auto px-4 py-16">
           <div className="grid md:grid-cols-2 gap-8 items-center min-h-screen">
             <div className="text-white">
-              <img src="/placeholder.svg?height=200&width=264" alt="Art Paisage" className="w-48 md:w-64 h-auto mb-8" />
+              <img
+                src="https://d335luupugsy2.cloudfront.net/cms/files/712823/1750704771/$69f1svd0slh"
+                alt="Art Paisage"
+                className="w-48 md:w-64 h-auto mb-8"
+              />
               <div className="max-w-md">
                 <p className="text-white mb-4">
                   Viver no <strong>Art Paisage</strong> é estar ao lado de um refúgio natural com mais de{" "}

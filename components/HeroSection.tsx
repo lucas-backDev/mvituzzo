@@ -4,7 +4,11 @@ export default function HeroSection() {
       {/* Header com logo */}
       <section className="bg-[#3aa54e] py-4">
         <div className="container mx-auto px-4 flex justify-center">
-          <img src="/placeholder.svg?height=80&width=287" alt="M Vituzzo Logo" className="h-16 md:h-20 w-auto" />
+          <img
+            src="https://d335luupugsy2.cloudfront.net/cms/files/712823/1749216591/$brmvgi52xd"
+            alt="M Vituzzo Logo"
+            className="h-16 md:h-20 w-auto"
+          />
         </div>
       </section>
 
@@ -12,7 +16,7 @@ export default function HeroSection() {
       <section
         className="min-h-screen bg-cover bg-center bg-no-repeat relative"
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(0,49,59,0.75), rgba(0,49,59,0.75)), url('/placeholder.svg?height=1200&width=1920')`,
+          backgroundImage: `linear-gradient(to bottom, rgba(0,49,59,0.75), rgba(0,49,59,0.75)), url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1749216591/$saaxtq3t1zq')`,
         }}
       >
         <div className="container mx-auto px-4 py-8 md:py-16 flex flex-col items-center justify-center min-h-screen text-center">
@@ -27,7 +31,7 @@ export default function HeroSection() {
           {/* Logo Art Paisage */}
           <div className="mb-8">
             <img
-              src="/placeholder.svg?height=300&width=365"
+              src="https://d335luupugsy2.cloudfront.net/cms/files/712823/1749216591/$2fhuei8y0br"
               alt="Art Paisage Logo"
               className="w-64 md:w-80 h-auto mx-auto"
             />
@@ -36,7 +40,7 @@ export default function HeroSection() {
           {/* Ícone decorativo */}
           <div className="mb-8">
             <img
-              src="/placeholder.svg?height=88&width=88"
+              src="https://d335luupugsy2.cloudfront.net/cms/files/712823/1749216591/$ee0gaiqmins"
               alt="Decorative Icon"
               className="w-16 md:w-20 h-auto mx-auto"
             />

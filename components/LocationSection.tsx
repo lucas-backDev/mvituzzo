@@ -6,7 +6,7 @@ export default function LocationSection() {
           {/* Imagem principal */}
           <div className="text-center mb-16">
             <img
-              src="/placeholder.svg?height=400&width=940"
+              src="https://d335luupugsy2.cloudfront.net/cms/files/712823/1750704771/$4wk5elfg0vv"
               alt="Localização"
               className="w-full max-w-4xl mx-auto h-auto"
             />
@@ -17,13 +17,13 @@ export default function LocationSection() {
             <div
               className="h-64 bg-cover bg-center rounded-lg"
               style={{
-                backgroundImage: `url('/placeholder.svg?height=300&width=460')`,
+                backgroundImage: `url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1750704771/$ekaqrmxsms')`,
               }}
             ></div>
             <div
               className="h-64 bg-cover bg-center rounded-lg"
               style={{
-                backgroundImage: `url('/placeholder.svg?height=300&width=460')`,
+                backgroundImage: `url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1750704771/$wl5d8tw4v2j')`,
               }}
             ></div>
           </div>

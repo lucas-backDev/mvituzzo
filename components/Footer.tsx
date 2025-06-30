@@ -3,7 +3,7 @@ export default function Footer() {
     <footer
       className="bg-cover bg-center bg-no-repeat py-16"
       style={{
-        backgroundImage: `url('/placeholder.svg?height=600&width=1920')`,
+        backgroundImage: `url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1706192993/$f5z2kbktzdw')`,
       }}
     >
       <div className="container mx-auto px-4">
@@ -12,15 +12,19 @@ export default function Footer() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             {/* Seção esquerda - Carlos Alberto */}
             <div className="flex flex-col items-center text-center space-y-4">
-              <img src="/carlos-foto.png" alt="Carlos Alberto" className="w-32 h-32 rounded-full shadow-lg" />
-              <img src="/carlos-alberto-text.png" alt="Carlos Alberto" className="h-8 w-auto" />
-              <img src="/creci-text.png" alt="CRECI 176.642F" className="h-6 w-auto" />
+              <img
+                src="/carlos-foto-circular.png"
+                alt="Carlos Alberto"
+                className="w-32 h-32 rounded-full shadow-lg object-cover"
+              />
+              <img src="/carlos-alberto-nome.png" alt="Carlos Alberto" className="h-8 w-auto max-w-xs" />
+              <img src="/creci-numero.png" alt="CRECI 176.642F" className="h-6 w-auto max-w-xs" />
             </div>
 
             {/* Seção direita - Partner e Logo */}
             <div className="flex flex-col items-center text-center space-y-6">
-              <img src="/partner-text.png" alt="Partner" className="h-10 w-auto" />
-              <img src="/mvituzzo-logo-footer.png" alt="M Vituzzo Empreendimentos" className="h-16 w-auto" />
+              <img src="/partner-titulo.png" alt="Partner" className="h-10 w-auto max-w-xs" />
+              <img src="/mvituzzo-logo-footer.png" alt="M Vituzzo Empreendimentos" className="h-16 w-auto max-w-sm" />
             </div>
           </div>
         </div>

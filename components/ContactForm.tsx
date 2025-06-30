@@ -96,7 +96,7 @@ export default function ContactForm() {
           <div className="bg-transparent p-8 rounded-lg">
             <div className="text-center mb-8">
               <img
-                src="/placeholder.svg?height=100&width=400"
+                src="https://d335luupugsy2.cloudfront.net/cms/files/712823/1749216591/$y3r268fgswn"
                 alt="Art Paisage Logo"
                 className="w-full max-w-sm mx-auto h-auto"
               />
@@ -198,7 +198,7 @@ export default function ContactForm() {
           {/* Imagem lateral */}
           <div className="flex items-center justify-center">
             <img
-              src="/placeholder.svg?height=400&width=497"
+              src="https://d335luupugsy2.cloudfront.net/cms/files/712823/1749581881/$r5rs2a7jn7"
               alt="Art Paisage Render"
               className="w-full max-w-md h-auto"
             />
