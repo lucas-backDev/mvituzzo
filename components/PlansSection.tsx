@@ -2,7 +2,7 @@ export default function PlansSection() {
   return (
     <>
       <section
-        className="py-16 bg-cover bg-center bg-fixed"
+        className="py-16 bg-cover bg-center"
         style={{
           backgroundImage: `url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1750704771/$hpxlzxpy5e')`,
         }}

@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description:
     "Em breve em Santana - São José dos Campos. Onde a arte emoldura a paisagem e a paisagem inspira a arte.",
   keywords: "Art Paisage, M Vituzzo, Santana, São José dos Campos, apartamento, lançamento",
-    generator: 'v0.dev'
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
 }
 
 export default function RootLayout({

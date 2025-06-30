@@ -183,3 +183,50 @@ img {
   position: relative;
   z-index: 2;
 }
+
+/* Fix para overflow horizontal em mobile */
+html,
+body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Fix para background-attachment fixed em mobile */
+@media (max-width: 768px) {
+  .bg-fixed {
+    background-attachment: scroll !important;
+  }
+
+  /* Garantir que seções ocupem 100% da largura */
+  section {
+    width: 100vw;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Fix para containers em mobile */
+  .container {
+    width: 100%;
+    max-width: 100vw;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* Garantir que imagens não causem overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fix específico para seções com background */
+.section-full-width {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}

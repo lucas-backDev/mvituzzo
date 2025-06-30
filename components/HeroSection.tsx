@@ -14,7 +14,7 @@ export default function HeroSection() {
 
       {/* Hero principal */}
       <section
-        className="min-h-screen bg-cover bg-center bg-no-repeat relative"
+        className="min-h-screen bg-cover bg-center bg-no-repeat relative w-full"
         style={{
           backgroundImage: `linear-gradient(to bottom, rgba(0,49,59,0.75), rgba(0,49,59,0.75)), url('https://d335luupugsy2.cloudfront.net/cms/files/712823/1749216591/$saaxtq3t1zq')`,
         }}
