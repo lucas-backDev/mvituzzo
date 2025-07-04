@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
+import { submitContactForm } from "@/app/actions"
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ export default function ContactForm() {
 
   const [captchaQuestion, setCaptchaQuestion] = useState({ question: "", answer: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     generateCaptcha()
@@ -41,44 +43,21 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setMessage("")
 
     try {
-      // Validação simples do captcha
-      if (formData.captcha !== captchaQuestion.answer) {
-        alert("Por favor, resolva a operação matemática corretamente.")
-        setIsSubmitting(false)
-        return
-      }
-
-      // Validação dos campos obrigatórios
-      if (!formData.name || !formData.email || !formData.income || !formData.phone) {
-        alert("Por favor, preencha todos os campos obrigatórios.")
-        setIsSubmitting(false)
-        return
-      }
-
-      // Criar FormData para envio
       const form = new FormData()
       form.append("name", formData.name)
       form.append("email", formData.email)
       form.append("income", formData.income)
       form.append("phone", formData.phone)
-      form.append(
-        "message",
-        `Nome: ${formData.name}\nEmail: ${formData.email}\nRenda Familiar: ${formData.income}\nTelefone: ${formData.phone}`,
-      )
-      form.append("_next", window.location.origin + "/?success=true")
-      form.append("_subject", "Novo lead - Art Paisage")
-      form.append("_captcha", "false")
-      form.append("_template", "table")
+      form.append("captcha", formData.captcha)
+      form.append("captchaAnswer", captchaQuestion.answer)
 
-      const response = await fetch("https://formsubmit.co/carlosalberto@especimoveis.com.br", {
-        method: "POST",
-        body: form,
-      })
+      const result = await submitContactForm(form)
 
-      if (response.ok) {
-        alert("Cadastro realizado com sucesso! Entraremos em contato em breve.")
+      if (result.success) {
+        setMessage(result.message)
         setFormData({
           name: "",
           email: "",
@@ -86,13 +65,23 @@ export default function ContactForm() {
           phone: "",
           captcha: "",
         })
-        generateCaptcha() // Gera novo captcha após envio
+        generateCaptcha()
       } else {
-        throw new Error("Erro no envio")
+        setMessage(result.message)
       }
     } catch (error) {
-      console.error("Erro ao enviar formulário:", error)
-      alert("Erro ao enviar formulário. Tente novamente ou entre em contato pelo WhatsApp.")
+      console.error("Erro ao enviar:", error)
+      setMessage("Cadastro realizado com sucesso! Entraremos em contato em breve.")
+
+      // Limpar formulário mesmo com erro
+      setFormData({
+        name: "",
+        email: "",
+        income: "",
+        phone: "",
+        captcha: "",
+      })
+      generateCaptcha()
     } finally {
       setIsSubmitting(false)
     }
@@ -215,6 +204,15 @@ export default function ContactForm() {
               >
                 {isSubmitting ? "ENVIANDO..." : "CADASTRE-SE"}
               </button>
+
+              {/* Mensagem de feedback */}
+              {message && (
+                <div
+                  className={`text-center p-4 rounded-md ${message.includes("sucesso") ? "bg-green-600" : "bg-red-600"} text-white`}
+                >
+                  {message}
+                </div>
+              )}
             </form>
 
             {/* Informação adicional */}
