@@ -14,6 +14,7 @@ export default function ContactForm() {
 
   const [captchaQuestion, setCaptchaQuestion] = useState({ question: "", answer: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     generateCaptcha()
@@ -43,58 +44,128 @@ export default function ContactForm() {
 
     // Validação do captcha
     if (formData.captcha !== captchaQuestion.answer) {
-      alert("Por favor, resolva a operação matemática corretamente.")
+      setMessage("Por favor, resolva a operação matemática corretamente.")
       return
     }
 
     // Validação dos campos obrigatórios
     if (!formData.name || !formData.email || !formData.income || !formData.phone) {
-      alert("Por favor, preencha todos os campos obrigatórios.")
+      setMessage("Por favor, preencha todos os campos obrigatórios.")
       return
     }
 
     setIsSubmitting(true)
+    setMessage("")
 
-    // Criar um formulário HTML temporário para envio direto
-    const tempForm = document.createElement("form")
-    tempForm.action = "https://formsubmit.co/carlosalberto@especimoveis.com.br"
-    tempForm.method = "POST"
-    tempForm.style.display = "none"
+    try {
+      // Preparar dados para Netlify Forms
+      const formDataToSend = new FormData()
+      formDataToSend.append("form-name", "contact-art-paisage")
+      formDataToSend.append("name", formData.name)
+      formDataToSend.append("email", formData.email)
+      formDataToSend.append("income", formData.income)
+      formDataToSend.append("phone", formData.phone)
+      formDataToSend.append(
+        "message",
+        `
+        Nome: ${formData.name}
+        Email: ${formData.email}
+        Renda Familiar: ${formData.income}
+        Telefone: ${formData.phone}
+        
+        Lead capturado via Art Paisage - M Vituzzo
+      `,
+      )
 
-    // Adicionar campos
-    const fields = [
-      { name: "name", value: formData.name },
-      { name: "email", value: formData.email },
-      { name: "Renda_Familiar", value: formData.income },
-      { name: "phone", value: formData.phone },
-      { name: "_subject", value: "Novo lead - Art Paisage" },
-      { name: "_captcha", value: "false" },
-      { name: "_next", value: window.location.origin + "/?success=true" },
-      { name: "_template", value: "table" },
-    ]
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formDataToSend as any).toString(),
+      })
 
-    fields.forEach((field) => {
-      const input = document.createElement("input")
-      input.type = "hidden"
-      input.name = field.name
-      input.value = field.value
-      tempForm.appendChild(input)
+      if (response.ok) {
+        setMessage("✅ Cadastro realizado com sucesso! Entraremos em contato em breve.")
+        setFormData({
+          name: "",
+          email: "",
+          income: "",
+          phone: "",
+          captcha: "",
+        })
+        generateCaptcha()
+
+        // Enviar também via EmailJS como backup
+        await sendBackupEmail()
+      } else {
+        throw new Error("Erro no envio")
+      }
+    } catch (error) {
+      console.error("Erro ao enviar:", error)
+
+      // Tentar envio via EmailJS como fallback
+      try {
+        await sendBackupEmail()
+        setMessage("✅ Cadastro realizado com sucesso! Entraremos em contato em breve.")
+        setFormData({
+          name: "",
+          email: "",
+          income: "",
+          phone: "",
+          captcha: "",
+        })
+        generateCaptcha()
+      } catch (backupError) {
+        setMessage("❌ Erro ao enviar formulário. Tente novamente ou entre em contato pelo WhatsApp.")
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const sendBackupEmail = async () => {
+    // Envio via EmailJS como backup
+    const emailData = {
+      to_email: "carlosalberto@especimoveis.com.br",
+      from_name: formData.name,
+      from_email: formData.email,
+      phone: formData.phone,
+      income: formData.income,
+      message: `
+        Novo lead - Art Paisage
+        
+        Nome: ${formData.name}
+        Email: ${formData.email}
+        Telefone: ${formData.phone}
+        Renda Familiar: ${formData.income}
+        
+        Enviado via site Art Paisage
+      `,
+    }
+
+    // Usar Web3Forms como alternativa
+    const web3FormData = new FormData()
+    web3FormData.append("access_key", "YOUR_WEB3FORMS_KEY") // Você precisará criar uma conta
+    web3FormData.append("name", formData.name)
+    web3FormData.append("email", formData.email)
+    web3FormData.append("phone", formData.phone)
+    web3FormData.append(
+      "message",
+      `
+      Renda Familiar: ${formData.income}
+      
+      Lead capturado via Art Paisage - M Vituzzo
+    `,
+    )
+    web3FormData.append("redirect", window.location.origin + "/?success=true")
+
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      body: web3FormData,
     })
 
-    // Adicionar ao DOM e enviar
-    document.body.appendChild(tempForm)
-    tempForm.submit()
-
-    // Limpar formulário
-    setFormData({
-      name: "",
-      email: "",
-      income: "",
-      phone: "",
-      captcha: "",
-    })
-    generateCaptcha()
-    setIsSubmitting(false)
+    if (!response.ok) {
+      throw new Error("Backup email failed")
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -107,6 +178,15 @@ export default function ContactForm() {
   return (
     <section id="contact-form" className="bg-[#00313b] py-16">
       <div className="container mx-auto px-4">
+        {/* Formulário oculto para Netlify Forms */}
+        <form name="contact-art-paisage" netlify="true" hidden>
+          <input type="text" name="name" />
+          <input type="email" name="email" />
+          <input type="text" name="income" />
+          <input type="tel" name="phone" />
+          <textarea name="message"></textarea>
+        </form>
+
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Formulário */}
           <div className="bg-transparent p-8 rounded-lg">
@@ -214,6 +294,17 @@ export default function ContactForm() {
               >
                 {isSubmitting ? "ENVIANDO..." : "CADASTRE-SE"}
               </button>
+
+              {/* Mensagem de feedback */}
+              {message && (
+                <div
+                  className={`text-center p-4 rounded-md ${
+                    message.includes("✅") ? "bg-green-600" : "bg-red-600"
+                  } text-white`}
+                >
+                  {message}
+                </div>
+              )}
             </form>
 
             {/* Informação adicional */}
