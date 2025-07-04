@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 
 export default function ContactForm() {
@@ -14,6 +13,7 @@ export default function ContactForm() {
   })
 
   const [captchaQuestion, setCaptchaQuestion] = useState({ question: "", answer: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     generateCaptcha()
@@ -40,24 +40,38 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
-    // Validação simples do captcha
-    if (formData.captcha !== captchaQuestion.answer) {
-      alert("Por favor, resolva a operação matemática corretamente.")
-      return
-    }
-
-    // Criar FormData para envio
-    const form = new FormData()
-    form.append("name", formData.name)
-    form.append("email", formData.email)
-    form.append("Renda Familiar", formData.income)
-    form.append("phone", formData.phone)
-    form.append("_next", window.location.href + "?success=true")
-    form.append("_subject", "Novo lead - Art Paisage")
-    form.append("_captcha", "false")
+    setIsSubmitting(true)
 
     try {
+      // Validação simples do captcha
+      if (formData.captcha !== captchaQuestion.answer) {
+        alert("Por favor, resolva a operação matemática corretamente.")
+        setIsSubmitting(false)
+        return
+      }
+
+      // Validação dos campos obrigatórios
+      if (!formData.name || !formData.email || !formData.income || !formData.phone) {
+        alert("Por favor, preencha todos os campos obrigatórios.")
+        setIsSubmitting(false)
+        return
+      }
+
+      // Criar FormData para envio
+      const form = new FormData()
+      form.append("name", formData.name)
+      form.append("email", formData.email)
+      form.append("income", formData.income)
+      form.append("phone", formData.phone)
+      form.append(
+        "message",
+        `Nome: ${formData.name}\nEmail: ${formData.email}\nRenda Familiar: ${formData.income}\nTelefone: ${formData.phone}`,
+      )
+      form.append("_next", window.location.origin + "/?success=true")
+      form.append("_subject", "Novo lead - Art Paisage")
+      form.append("_captcha", "false")
+      form.append("_template", "table")
+
       const response = await fetch("https://formsubmit.co/carlosalberto@especimoveis.com.br", {
         method: "POST",
         body: form,
@@ -77,7 +91,10 @@ export default function ContactForm() {
         throw new Error("Erro no envio")
       }
     } catch (error) {
-      alert("Erro ao enviar formulário. Tente novamente.")
+      console.error("Erro ao enviar formulário:", error)
+      alert("Erro ao enviar formulário. Tente novamente ou entre em contato pelo WhatsApp.")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -114,8 +131,9 @@ export default function ContactForm() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none"
-                  placeholder="Nome *"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none disabled:opacity-50"
+                  placeholder="Digite seu nome completo"
                 />
               </div>
 
@@ -130,8 +148,9 @@ export default function ContactForm() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none"
-                  placeholder="Email *"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none disabled:opacity-50"
+                  placeholder="Digite seu melhor email"
                 />
               </div>
 
@@ -145,9 +164,10 @@ export default function ContactForm() {
                   value={formData.income}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none disabled:opacity-50"
                 >
-                  <option value="">Selecione</option>
+                  <option value="">Selecione sua faixa de renda</option>
                   <option value="R$ 5.000,00 a R$ 10.000,00">R$ 5.000,00 a R$ 10.000,00</option>
                   <option value="R$ 10.000,00 a R$ 15.000,00">R$ 10.000,00 a R$ 15.000,00</option>
                   <option value="Acima de R$ 15.000,00">Acima de R$ 15.000,00</option>
@@ -165,34 +185,44 @@ export default function ContactForm() {
                   value={formData.phone}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none"
-                  placeholder="Telefone *"
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none disabled:opacity-50"
+                  placeholder="(12) 99999-9999"
                 />
               </div>
 
               <div>
                 <label htmlFor="captcha" className="block text-white text-sm font-medium mb-2">
-                  {captchaQuestion.question}
+                  Resolva a operação: {captchaQuestion.question}
                 </label>
                 <input
-                  type="text"
+                  type="number"
                   id="captcha"
                   name="captcha"
                   value={formData.captcha}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none"
-                  placeholder={captchaQuestion.question}
+                  disabled={isSubmitting}
+                  className="w-full px-4 py-3 rounded-md border-0 bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-[#3aa54e] focus:outline-none disabled:opacity-50"
+                  placeholder="Digite o resultado"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-[#3aa54e] text-[#002d39] py-4 px-8 rounded-full text-xl font-bold hover:bg-opacity-90 transition-colors"
+                disabled={isSubmitting}
+                className="w-full bg-[#3aa54e] text-[#002d39] py-4 px-8 rounded-full text-xl font-bold hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                CADASTRE-SE
+                {isSubmitting ? "ENVIANDO..." : "CADASTRE-SE"}
               </button>
             </form>
+
+            {/* Informação adicional */}
+            <div className="mt-6 text-center">
+              <p className="text-white text-sm">
+                Ou entre em contato diretamente pelo WhatsApp clicando no botão verde no canto da tela.
+              </p>
+            </div>
           </div>
 
           {/* Imagem lateral */}
