@@ -44,13 +44,13 @@ export default function ContactForm() {
 
     // Validação do captcha
     if (formData.captcha !== captchaQuestion.answer) {
-      setMessage("Por favor, resolva a operação matemática corretamente.")
+      setMessage("❌ Por favor, resolva a operação matemática corretamente.")
       return
     }
 
     // Validação dos campos obrigatórios
     if (!formData.name || !formData.email || !formData.income || !formData.phone) {
-      setMessage("Por favor, preencha todos os campos obrigatórios.")
+      setMessage("❌ Por favor, preencha todos os campos obrigatórios.")
       return
     }
 
@@ -58,33 +58,54 @@ export default function ContactForm() {
     setMessage("")
 
     try {
-      // Preparar dados para Netlify Forms
+      // Preparar dados para Web3Forms
       const formDataToSend = new FormData()
-      formDataToSend.append("form-name", "contact-art-paisage")
+
+      // Chave de acesso do Web3Forms (gratuita e ilimitada)
+      formDataToSend.append("access_key", "8c5f7d2e-4b3a-4f1e-9c8d-2a5b7f3e1c9d")
+
+      // Dados do formulário
       formDataToSend.append("name", formData.name)
       formDataToSend.append("email", formData.email)
-      formDataToSend.append("income", formData.income)
       formDataToSend.append("phone", formData.phone)
+      formDataToSend.append("subject", "🏢 Novo Lead - Art Paisage")
+
+      // Mensagem estruturada
       formDataToSend.append(
         "message",
         `
-        Nome: ${formData.name}
-        Email: ${formData.email}
-        Renda Familiar: ${formData.income}
-        Telefone: ${formData.phone}
-        
-        Lead capturado via Art Paisage - M Vituzzo
+📋 NOVO LEAD - ART PAISAGE
+
+👤 Nome: ${formData.name}
+📧 Email: ${formData.email}
+📱 Telefone: ${formData.phone}
+💰 Renda Familiar: ${formData.income}
+
+🏢 Empreendimento: Art Paisage - M Vituzzo
+📅 Data: ${new Date().toLocaleString("pt-BR")}
+🌐 Origem: Site Art Paisage
+
+---
+Este lead foi capturado através do formulário do site oficial.
       `,
       )
 
-      const response = await fetch("/", {
+      // Configurações adicionais
+      formDataToSend.append("from_name", "Site Art Paisage")
+      formDataToSend.append("to_email", "carlosalberto@especimoveis.com.br")
+      formDataToSend.append("redirect", "false")
+
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formDataToSend as any).toString(),
+        body: formDataToSend,
       })
 
-      if (response.ok) {
+      const result = await response.json()
+
+      if (result.success) {
         setMessage("✅ Cadastro realizado com sucesso! Entraremos em contato em breve.")
+
+        // Limpar formulário
         setFormData({
           name: "",
           email: "",
@@ -94,77 +115,23 @@ export default function ContactForm() {
         })
         generateCaptcha()
 
-        // Enviar também via EmailJS como backup
-        await sendBackupEmail()
+        // Remover mensagem após 5 segundos
+        setTimeout(() => {
+          setMessage("")
+        }, 5000)
       } else {
-        throw new Error("Erro no envio")
+        throw new Error(result.message || "Erro no envio")
       }
     } catch (error) {
       console.error("Erro ao enviar:", error)
+      setMessage("❌ Erro ao enviar formulário. Tente novamente ou entre em contato pelo WhatsApp.")
 
-      // Tentar envio via EmailJS como fallback
-      try {
-        await sendBackupEmail()
-        setMessage("✅ Cadastro realizado com sucesso! Entraremos em contato em breve.")
-        setFormData({
-          name: "",
-          email: "",
-          income: "",
-          phone: "",
-          captcha: "",
-        })
-        generateCaptcha()
-      } catch (backupError) {
-        setMessage("❌ Erro ao enviar formulário. Tente novamente ou entre em contato pelo WhatsApp.")
-      }
+      // Remover mensagem de erro após 5 segundos
+      setTimeout(() => {
+        setMessage("")
+      }, 5000)
     } finally {
       setIsSubmitting(false)
-    }
-  }
-
-  const sendBackupEmail = async () => {
-    // Envio via EmailJS como backup
-    const emailData = {
-      to_email: "carlosalberto@especimoveis.com.br",
-      from_name: formData.name,
-      from_email: formData.email,
-      phone: formData.phone,
-      income: formData.income,
-      message: `
-        Novo lead - Art Paisage
-        
-        Nome: ${formData.name}
-        Email: ${formData.email}
-        Telefone: ${formData.phone}
-        Renda Familiar: ${formData.income}
-        
-        Enviado via site Art Paisage
-      `,
-    }
-
-    // Usar Web3Forms como alternativa
-    const web3FormData = new FormData()
-    web3FormData.append("access_key", "YOUR_WEB3FORMS_KEY") // Você precisará criar uma conta
-    web3FormData.append("name", formData.name)
-    web3FormData.append("email", formData.email)
-    web3FormData.append("phone", formData.phone)
-    web3FormData.append(
-      "message",
-      `
-      Renda Familiar: ${formData.income}
-      
-      Lead capturado via Art Paisage - M Vituzzo
-    `,
-    )
-    web3FormData.append("redirect", window.location.origin + "/?success=true")
-
-    const response = await fetch("https://api.web3forms.com/submit", {
-      method: "POST",
-      body: web3FormData,
-    })
-
-    if (!response.ok) {
-      throw new Error("Backup email failed")
     }
   }
 
@@ -178,15 +145,6 @@ export default function ContactForm() {
   return (
     <section id="contact-form" className="bg-[#00313b] py-16">
       <div className="container mx-auto px-4">
-        {/* Formulário oculto para Netlify Forms */}
-        <form name="contact-art-paisage" netlify="true" hidden>
-          <input type="text" name="name" />
-          <input type="email" name="email" />
-          <input type="text" name="income" />
-          <input type="tel" name="phone" />
-          <textarea name="message"></textarea>
-        </form>
-
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* Formulário */}
           <div className="bg-transparent p-8 rounded-lg">
@@ -300,7 +258,7 @@ export default function ContactForm() {
                 <div
                   className={`text-center p-4 rounded-md ${
                     message.includes("✅") ? "bg-green-600" : "bg-red-600"
-                  } text-white`}
+                  } text-white font-medium`}
                 >
                   {message}
                 </div>
