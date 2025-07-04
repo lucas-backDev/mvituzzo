@@ -61,20 +61,19 @@ export default function ContactForm() {
       // Preparar dados para Web3Forms
       const formDataToSend = new FormData()
 
-      // Chave de acesso do Web3Forms (gratuita e ilimitada)
+      // Chave de acesso do Web3Forms
       formDataToSend.append("access_key", "83ed46be-27fe-4b59-950d-63cda05c00ca")
 
       // Dados do formulário
       formDataToSend.append("name", formData.name)
       formDataToSend.append("email", formData.email)
       formDataToSend.append("phone", formData.phone)
-      formDataToSend.append("subject", "🏢 Novo Lead - Art Paisage")
+      formDataToSend.append("subject", "🏢 NOVO LEAD - ART PAISAGE")
 
-      // Mensagem estruturada
+      // Mensagem limpa e formatada
       formDataToSend.append(
         "message",
-        `
-📋 NOVO LEAD - ART PAISAGE
+        `🏢 NOVO LEAD - ART PAISAGE
 
 👤 Nome: ${formData.name}
 📧 Email: ${formData.email}
@@ -86,14 +85,14 @@ export default function ContactForm() {
 🌐 Origem: Site Art Paisage
 
 ---
-Este lead foi capturado através do formulário do site oficial.
-      `,
+Este lead foi capturado através do formulário do site oficial.`,
       )
 
-      // Configurações adicionais
-      formDataToSend.append("from_name", "Site Art Paisage")
+      // Configurações para email mais limpo
+      formDataToSend.append("from_name", "Art Paisage - Site Oficial")
       formDataToSend.append("to_email", "lucas.cgomesb19@gmail.com")
       formDataToSend.append("redirect", "false")
+      formDataToSend.append("template", "basic") // Template mais limpo
 
       const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
@@ -102,7 +101,8 @@ Este lead foi capturado através do formulário do site oficial.
 
       const result = await response.json()
 
-      if (result.success) {
+      // Verificação mais robusta do sucesso
+      if (response.ok && result.success) {
         setMessage("✅ Cadastro realizado com sucesso! Entraremos em contato em breve.")
 
         // Limpar formulário
@@ -120,11 +120,19 @@ Este lead foi capturado através do formulário do site oficial.
           setMessage("")
         }, 5000)
       } else {
+        // Log do erro para debug
+        console.error("Erro na resposta:", result)
         throw new Error(result.message || "Erro no envio")
       }
     } catch (error) {
       console.error("Erro ao enviar:", error)
-      setMessage("❌ Erro ao enviar formulário. Tente novamente ou entre em contato pelo WhatsApp.")
+
+      // Verificar se o erro é de rede ou do servidor
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        setMessage("❌ Erro de conexão. Verifique sua internet e tente novamente.")
+      } else {
+        setMessage("❌ Erro ao enviar formulário. Tente novamente ou entre em contato pelo WhatsApp.")
+      }
 
       // Remover mensagem de erro após 5 segundos
       setTimeout(() => {
