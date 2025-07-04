@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { submitContactForm } from "@/app/actions"
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -15,7 +14,6 @@ export default function ContactForm() {
 
   const [captchaQuestion, setCaptchaQuestion] = useState({ question: "", answer: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [message, setMessage] = useState("")
 
   useEffect(() => {
     generateCaptcha()
@@ -42,49 +40,61 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
-    setMessage("")
 
-    try {
-      const form = new FormData()
-      form.append("name", formData.name)
-      form.append("email", formData.email)
-      form.append("income", formData.income)
-      form.append("phone", formData.phone)
-      form.append("captcha", formData.captcha)
-      form.append("captchaAnswer", captchaQuestion.answer)
-
-      const result = await submitContactForm(form)
-
-      if (result.success) {
-        setMessage(result.message)
-        setFormData({
-          name: "",
-          email: "",
-          income: "",
-          phone: "",
-          captcha: "",
-        })
-        generateCaptcha()
-      } else {
-        setMessage(result.message)
-      }
-    } catch (error) {
-      console.error("Erro ao enviar:", error)
-      setMessage("Cadastro realizado com sucesso! Entraremos em contato em breve.")
-
-      // Limpar formulário mesmo com erro
-      setFormData({
-        name: "",
-        email: "",
-        income: "",
-        phone: "",
-        captcha: "",
-      })
-      generateCaptcha()
-    } finally {
-      setIsSubmitting(false)
+    // Validação do captcha
+    if (formData.captcha !== captchaQuestion.answer) {
+      alert("Por favor, resolva a operação matemática corretamente.")
+      return
     }
+
+    // Validação dos campos obrigatórios
+    if (!formData.name || !formData.email || !formData.income || !formData.phone) {
+      alert("Por favor, preencha todos os campos obrigatórios.")
+      return
+    }
+
+    setIsSubmitting(true)
+
+    // Criar um formulário HTML temporário para envio direto
+    const tempForm = document.createElement("form")
+    tempForm.action = "https://formsubmit.co/carlosalberto@especimoveis.com.br"
+    tempForm.method = "POST"
+    tempForm.style.display = "none"
+
+    // Adicionar campos
+    const fields = [
+      { name: "name", value: formData.name },
+      { name: "email", value: formData.email },
+      { name: "Renda_Familiar", value: formData.income },
+      { name: "phone", value: formData.phone },
+      { name: "_subject", value: "Novo lead - Art Paisage" },
+      { name: "_captcha", value: "false" },
+      { name: "_next", value: window.location.origin + "/?success=true" },
+      { name: "_template", value: "table" },
+    ]
+
+    fields.forEach((field) => {
+      const input = document.createElement("input")
+      input.type = "hidden"
+      input.name = field.name
+      input.value = field.value
+      tempForm.appendChild(input)
+    })
+
+    // Adicionar ao DOM e enviar
+    document.body.appendChild(tempForm)
+    tempForm.submit()
+
+    // Limpar formulário
+    setFormData({
+      name: "",
+      email: "",
+      income: "",
+      phone: "",
+      captcha: "",
+    })
+    generateCaptcha()
+    setIsSubmitting(false)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -204,15 +214,6 @@ export default function ContactForm() {
               >
                 {isSubmitting ? "ENVIANDO..." : "CADASTRE-SE"}
               </button>
-
-              {/* Mensagem de feedback */}
-              {message && (
-                <div
-                  className={`text-center p-4 rounded-md ${message.includes("sucesso") ? "bg-green-600" : "bg-red-600"} text-white`}
-                >
-                  {message}
-                </div>
-              )}
             </form>
 
             {/* Informação adicional */}
