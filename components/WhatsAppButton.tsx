@@ -71,7 +71,7 @@ export default function WhatsAppButton() {
       `}</style>
 
       <a
-        href="https://wa.me/5512997605200?text=Olá%2C+quero+receber+informações+exclusivas+do+Art+Paisage%21"
+        href="https://wa.me/5512996871324?text=Olá, Lucas!%2CDei uma olhada no seu portfólio, podemos conversar?+%21"
         target="_blank"
         rel="noopener noreferrer"
         className="whatsapp-button"

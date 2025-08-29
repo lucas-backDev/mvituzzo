@@ -68,14 +68,14 @@ Este lead foi capturado através do formulário do site oficial.`
 
       // Primeiro email
       const formData1 = new FormData()
-      formData1.append("access_key", "182f21e1-ec46-432e-826d-ed2e086f296b")
+      formData1.append("access_key", "")
       formData1.append("name", formData.name)
       formData1.append("email", formData.email)
       formData1.append("phone", formData.phone)
       formData1.append("subject", "🏢 NOVO LEAD - ART PAISAGE")
       formData1.append("message", messageContent)
       formData1.append("from_name", "Art Paisage - Site Oficial")
-      formData1.append("to_email", "carlosalberto@especimoveis.com.br")
+      formData1.append("to_email", "")
       formData1.append("redirect", "false")
       formData1.append("template", "basic")
 
@@ -88,7 +88,7 @@ Este lead foi capturado através do formulário do site oficial.`
       formData2.append("subject", "🏢 NOVO LEAD - ART PAISAGE")
       formData2.append("message", messageContent)
       formData2.append("from_name", "Art Paisage - Site Oficial")
-      formData2.append("to_email", "especcorretoradeimoveiseseguros@contact2sale.com")
+      formData2.append("to_email", "")
       formData2.append("redirect", "false")
       formData2.append("template", "basic")
 
