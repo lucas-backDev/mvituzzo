@@ -11,7 +11,6 @@ export default function ContactForm() {
     phone: "",
     captcha: "",
   })
-
   const [captchaQuestion, setCaptchaQuestion] = useState({ question: "", answer: "" })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState("")
@@ -25,14 +24,12 @@ export default function ContactForm() {
     const num2 = Math.floor(Math.random() * 10) + 1
     const operations = ["+", "-"]
     const operation = operations[Math.floor(Math.random() * operations.length)]
-
     let answer
     if (operation === "+") {
       answer = num1 + num2
     } else {
       answer = num1 - num2
     }
-
     setCaptchaQuestion({
       question: `${num1} ${operation} ${num2} = ?`,
       answer: answer.toString(),
@@ -41,7 +38,6 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     // Validação do captcha
     if (formData.captcha !== captchaQuestion.answer) {
       alert("Por favor, resolva a operação matemática corretamente.")
@@ -55,52 +51,61 @@ export default function ContactForm() {
     }
 
     setIsSubmitting(true)
-
     try {
-      // Preparar dados para Web3Forms
-      const formDataToSend = new FormData()
-
-      // Chave de acesso do Web3Forms
-      formDataToSend.append("access_key", "182f21e1-ec46-432e-826d-ed2e086f296b")
-
-      // Dados do formulário
-      formDataToSend.append("name", formData.name)
-      formDataToSend.append("email", formData.email)
-      formDataToSend.append("phone", formData.phone)
-      formDataToSend.append("subject", "🏢 NOVO LEAD - ART PAISAGE")
-
-      // Mensagem limpa e formatada
-      formDataToSend.append(
-        "message",
-        `🏢 NOVO LEAD - ART PAISAGE
+      // Mensagem formatada
+      const messageContent = `🏢 NOVO LEAD - ART PAISAGE
 
 👤 Nome: ${formData.name}
 📧 Email: ${formData.email}
 📱 Telefone: ${formData.phone}
 💰 Renda Familiar: ${formData.income}
-
 🏢 Empreendimento: Art Paisage - M Vituzzo
 📅 Data: ${new Date().toLocaleString("pt-BR")}
 🌐 Origem: Site Art Paisage
 
 ---
-Este lead foi capturado através do formulário do site oficial.`,
-      )
+Este lead foi capturado através do formulário do site oficial.`
 
-      // Configurações para email mais limpo
-      formDataToSend.append("from_name", "Art Paisage - Site Oficial")
-      formDataToSend.append("to_email", "carlosalberto@especimoveis.com.br")
-      formDataToSend.append("redirect", "false")
-      formDataToSend.append("template", "basic")
+      // Primeiro email
+      const formData1 = new FormData()
+      formData1.append("access_key", "182f21e1-ec46-432e-826d-ed2e086f296b")
+      formData1.append("name", formData.name)
+      formData1.append("email", formData.email)
+      formData1.append("phone", formData.phone)
+      formData1.append("subject", "🏢 NOVO LEAD - ART PAISAGE")
+      formData1.append("message", messageContent)
+      formData1.append("from_name", "Art Paisage - Site Oficial")
+      formData1.append("to_email", "carlosalberto@especimoveis.com.br")
+      formData1.append("redirect", "false")
+      formData1.append("template", "basic")
 
-      await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        body: formDataToSend,
-      })
+      // Segundo email
+      const formData2 = new FormData()
+      formData2.append("access_key", "182f21e1-ec46-432e-826d-ed2e086f296b")
+      formData2.append("name", formData.name)
+      formData2.append("email", formData.email)
+      formData2.append("phone", formData.phone)
+      formData2.append("subject", "🏢 NOVO LEAD - ART PAISAGE")
+      formData2.append("message", messageContent)
+      formData2.append("from_name", "Art Paisage - Site Oficial")
+      formData2.append("to_email", "especcorretoradeimoveiseseguros@contact2sale.com")
+      formData2.append("redirect", "false")
+      formData2.append("template", "basic")
+
+      // Enviar para ambos os emails simultaneamente
+      await Promise.all([
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData1,
+        }),
+        fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData2,
+        }),
+      ])
 
       // Sempre mostrar sucesso
       setMessage("✅ Cadastro realizado com sucesso! Entraremos em contato em breve.")
-
       // Limpar formulário
       setFormData({
         name: "",
@@ -110,17 +115,14 @@ Este lead foi capturado através do formulário do site oficial.`,
         captcha: "",
       })
       generateCaptcha()
-
       // Remover mensagem após 5 segundos
       setTimeout(() => {
         setMessage("")
       }, 5000)
     } catch (error) {
       console.log("Formulário enviado")
-
       // Sempre mostrar sucesso mesmo com "erro"
       setMessage("✅ Cadastro realizado com sucesso! Entraremos em contato em breve.")
-
       // Limpar formulário
       setFormData({
         name: "",
@@ -130,7 +132,6 @@ Este lead foi capturado através do formulário do site oficial.`,
         captcha: "",
       })
       generateCaptcha()
-
       // Remover mensagem após 5 segundos
       setTimeout(() => {
         setMessage("")
@@ -160,7 +161,6 @@ Este lead foi capturado através do formulário do site oficial.`,
                 className="w-full max-w-sm mx-auto h-auto"
               />
             </div>
-
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="name" className="block text-white text-sm font-medium mb-2">
@@ -178,7 +178,6 @@ Este lead foi capturado através do formulário do site oficial.`,
                   placeholder="Digite seu nome completo"
                 />
               </div>
-
               <div>
                 <label htmlFor="email" className="block text-white text-sm font-medium mb-2">
                   Email*
@@ -195,7 +194,6 @@ Este lead foi capturado através do formulário do site oficial.`,
                   placeholder="Digite seu melhor email"
                 />
               </div>
-
               <div>
                 <label htmlFor="income" className="block text-white text-sm font-medium mb-2">
                   Selecione, por favor, sua renda familiar:*
@@ -215,7 +213,6 @@ Este lead foi capturado através do formulário do site oficial.`,
                   <option value="Acima de R$ 15.000,00">Acima de R$ 15.000,00</option>
                 </select>
               </div>
-
               <div>
                 <label htmlFor="phone" className="block text-white text-sm font-medium mb-2">
                   Telefone*
@@ -232,7 +229,6 @@ Este lead foi capturado através do formulário do site oficial.`,
                   placeholder="(12) 99999-9999"
                 />
               </div>
-
               <div>
                 <label htmlFor="captcha" className="block text-white text-sm font-medium mb-2">
                   Resolva a operação: {captchaQuestion.question}
@@ -249,7 +245,6 @@ Este lead foi capturado através do formulário do site oficial.`,
                   placeholder="Digite o resultado"
                 />
               </div>
-
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -257,13 +252,11 @@ Este lead foi capturado através do formulário do site oficial.`,
               >
                 {isSubmitting ? "ENVIANDO..." : "CADASTRE-SE"}
               </button>
-
               {/* Mensagem de feedback - apenas sucesso */}
               {message && (
                 <div className="text-center p-4 rounded-md bg-green-600 text-white font-medium">{message}</div>
               )}
             </form>
-
             {/* Informação adicional */}
             <div className="mt-6 text-center">
               <p className="text-white text-sm">
@@ -271,7 +264,6 @@ Este lead foi capturado através do formulário do site oficial.`,
               </p>
             </div>
           </div>
-
           {/* Imagem lateral */}
           <div className="flex items-center justify-center">
             <img
