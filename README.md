@@ -25,16 +25,27 @@ Verifique sua versão com pnpm -v ou npm -v.
 
 Usando PNPM (recomendado)
 '''bash
+
 git clone https://github.com/lucas-backDev/mvituzzo.git
+
+
 cd mvituzzo
+
+
 pnpm install
 pnpm dev
 
 A aplicação abre em http://localhost:3000.
 
 Usando npm (alternativa)
+
+
 '''bash
 git clone https://github.com/lucas-backDev/mvituzzo.git
+
+
 cd mvituzzo
+
+
 npm install
 npm run dev
